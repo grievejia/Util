@@ -35,10 +35,11 @@
 // OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "Util/in_place.h"
+
 #include <limits.h>
 #include <memory>
 #include <new>
-#include <stddef.h>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
@@ -50,40 +51,6 @@ namespace util {
 // std::experimental::variant implementation
 // Before std::variant can be put into the C++ standard, I guess I have to rely
 // on this for now...
-
-struct __in_place_private {
-    template <typename>
-    struct __type_holder;
-
-    template <size_t>
-    struct __value_holder;
-};
-
-struct in_place_tag {
-    in_place_tag() = delete;
-};
-
-using in_place_t = in_place_tag (&)(__in_place_private&);
-
-template <class _Type>
-using in_place_type_t =
-    in_place_tag (&)(__in_place_private::__type_holder<_Type>&);
-
-template <size_t _Index>
-using in_place_index_t =
-    in_place_tag (&)(__in_place_private::__value_holder<_Index>&);
-
-in_place_tag in_place(__in_place_private&);
-
-template <class _Type>
-in_place_tag in_place(__in_place_private::__type_holder<_Type>&) {
-    throw __in_place_private();
-}
-
-template <size_t _Index>
-in_place_tag in_place(__in_place_private::__value_holder<_Index>&) {
-    throw __in_place_private();
-}
 
 class bad_variant_access : public std::logic_error {
 public:

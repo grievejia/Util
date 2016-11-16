@@ -1224,10 +1224,11 @@ TEST(OptionalTest, nested_optional) {
     EXPECT_TRUE(o2);
     EXPECT_TRUE(!*o2);
 
-    optional<optional<optional<int>>> o3(in_place, in_place, nullopt);
-    EXPECT_TRUE(o3);
-    EXPECT_TRUE(*o3);
-    EXPECT_TRUE(!**o3);
+    // With our modification of util::in_place we can no longer do this.
+    // optional<optional<optional<int>>> o3(in_place, in_place, nullopt);
+    // EXPECT_TRUE(o3);
+    // EXPECT_TRUE(*o3);
+    // EXPECT_TRUE(!**o3);
 }
 
 //// constexpr tests

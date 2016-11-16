@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "Util/in_place.h"
+
 #include <cassert>
 #include <functional>
 #include <initializer_list>
@@ -244,10 +246,6 @@ constexpr U convert(U v) {
 constexpr struct trivial_init_t {
 } trivial_init{};
 
-// 20.5.6, In-place construction
-constexpr struct in_place_t {
-} in_place{};
-
 // 20.5.7, Disengaged state indicator
 struct nullopt_t {
     struct init {};
@@ -450,7 +448,7 @@ public:
 
     template <class... Args>
     explicit constexpr optional(in_place_t, Args&&... args)
-        : OptionalBase<T>(in_place_t{}, constexpr_forward<Args>(args)...) {}
+        : OptionalBase<T>(in_place, constexpr_forward<Args>(args)...) {}
 
     template <class U, class... Args,
               TR2_OPTIONAL_REQUIRES(
@@ -458,7 +456,7 @@ public:
     OPTIONAL_CONSTEXPR_INIT_LIST explicit optional(in_place_t,
                                                    std::initializer_list<U> il,
                                                    Args&&... args)
-        : OptionalBase<T>(in_place_t{}, il, constexpr_forward<Args>(args)...) {}
+        : OptionalBase<T>(in_place, il, constexpr_forward<Args>(args)...) {}
 
     // 20.5.4.2, Destructor
     ~optional() = default;
