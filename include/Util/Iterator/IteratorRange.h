@@ -7,17 +7,18 @@ namespace util {
 
 // A range adaptor for a pair of iterators
 template <typename Iterator>
-class IteratorRange
-{
+class IteratorRange {
 private:
     Iterator first, last;
 
 public:
-    using value_type = typename Iterator::value_type;
-    using difference_type = typename Iterator::difference_type;
-    using pointer = typename Iterator::pointer;
-    using reference = typename Iterator::reference;
-    using iterator_category = typename Iterator::iterator_category;
+    using value_type = typename std::iterator_traits<Iterator>::value_type;
+    using difference_type =
+        typename std::iterator_traits<Iterator>::difference_type;
+    using pointer = typename std::iterator_traits<Iterator>::pointer;
+    using reference = typename std::iterator_traits<Iterator>::reference;
+    using iterator_category =
+        typename std::iterator_traits<Iterator>::iterator_category;
 
     IteratorRange(Iterator s, Iterator e)
         : first(std::move(s)), last(std::move(e)) {}
