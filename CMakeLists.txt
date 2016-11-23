@@ -46,6 +46,7 @@ if (BUILD_TESTS)
 	add_unit_test(OptionalTest)
 	add_unit_test(VariantTest)
 	add_unit_test(StopWatchTest)
+	add_unit_test(LambdaVisitorTest)
 endif()
 
 install (
