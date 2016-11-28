@@ -1,26 +1,29 @@
 cmake_minimum_required(VERSION 3.0)
 project(Util)
 
-# Check for C++14 support
-include (CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
-if (NOT COMPILER_SUPPORTS_CXX14)
-	message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
-endif()
-
 # Set compilation flag
-set (CMAKE_CXX_FLAGS " -std=c++14 -Wall -fno-rtti -fPIC")
+set (CMAKE_CXX_FLAGS "-Wall -fno-rtti")
 set (CMAKE_CXX_FLAGS_DEBUG "-O0 -g")
 set (CMAKE_CXX_FLAGS_RELEASE "-Ofast -march=native -mtune=native -DNDEBUG")
 
-option (BUILD_TESTS "build all unit tests" OFF)
+include(CTest)
 
 set(HEADER_PATH ${PROJECT_SOURCE_DIR}/include)
 include_directories (${HEADER_PATH})
-add_library (Util INTERFACE
+add_library (util INTERFACE)
+install (
+	DIRECTORY ${HEADER_PATH}/Util
+	DESTINATION include
 )
+install (
+	TARGETS util
+	DESTINATION lib
+)
+target_include_directories(util INTERFACE
+  $<BUILD_INTERFACE:${HEADER_PATH}>
+  $<INSTALL_INTERFACE:include>)
 
-if (BUILD_TESTS)
+if (BUILD_TESTING)
 	enable_testing()
 	set(UNITTEST_PATH ${PROJECT_SOURCE_DIR}/unittest)
 
@@ -48,12 +51,3 @@ if (BUILD_TESTS)
 	add_unit_test(StopWatchTest)
 	add_unit_test(LambdaVisitorTest)
 endif()
-
-install (
-	DIRECTORY ${HEADER_PATH}/Util
-	DESTINATION include
-)
-install (
-	TARGETS Util
-	DESTINATION lib
-)
